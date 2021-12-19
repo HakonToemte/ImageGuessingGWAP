@@ -50,7 +50,7 @@ namespace ImageGuessingGame.Pages
                 var gameId = Guid.Parse(Request.Query["gameId"]);
                 Game = await _gameProvider.GetGameByGuid(gameId);
             }
-            catch (Exception e)
+            catch
             {
                 var gameId = Guid.Parse(HttpContext.Session.GetString("GameGuid"));
                 Game = await _gameProvider.GetGameByGuid(gameId);

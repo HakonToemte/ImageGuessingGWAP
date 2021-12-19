@@ -1,5 +1,8 @@
 using System.Runtime.InteropServices;
 using System;
+using System.Windows.Shapes;
+using System.Windows.Media;
+using System.Numerics;
 using System.Linq;
 using System.IO;
 using System.Collections.Generic;
@@ -83,18 +86,26 @@ namespace ImageGuessingGame.GameContext
         }
         public void AutomaticSliceVoronoi(string pathforImage, string pathforSlices){
             var points = 5;
+            VoronoiGraph s = new VoronoiGraph();
             using (Image<Rgba32> image = Image.Load<Rgba32>(pathforImage))
             {
                 var voronoiseeds = RandomPoints(5, image.Width, image.Height);
+                Voronoi(voronoiseeds);
+                //Console.WriteLine(s.Edges);
+                
+                
             }
         }
-        private List<Point> RandomPoints(int amountOfPoints, int width, int height){
+        private void Voronoi(List<Vector2> voronoiseeds){
+            var polygon = new Polygon();
+        }
+        private List<Vector2> RandomPoints(int amountOfPoints, int width, int height){
             Random r = new Random();
-            var list = new List<Point>();
+            var list = new List<Vector2>();
             for (var i = 0; i < amountOfPoints; i++){
                 var intx = r.Next(0, width);
                 var inty = r.Next(0, height);
-                list.Add(new Point(intx,inty));
+                list.Add(new Vector2(intx,inty));
             }
             return list;
         }
@@ -112,7 +123,7 @@ namespace ImageGuessingGame.GameContext
                         var y=j*image.Height/columns;
                         var width = (i+1)*image.Width/rows;
                         var height = (j+1)*image.Height/columns;
-                        var crop = image.Clone(ima=>ima.Crop(Rectangle.FromLTRB(x,y,width,height)));
+                        var crop = image.Clone(ima=>ima.Crop(SixLabors.ImageSharp.Rectangle.FromLTRB(x,y,width,height)));
                         slice.Mutate(s=>s.DrawImage(crop,new Point(x, y), 1f));
                         slice.Save($"{pathforSlices}/{counter}.png");
                         counter++;
@@ -136,43 +147,7 @@ namespace ImageGuessingGame.GameContext
             }
             return suggestedindex;
         }
-        private string GetLabelForImage(string directory)
-        {
-            var os = Environment.OSVersion;
-            string fileName_forMapping;
-            string imageMappingPath = imageMappingPath = @".\data\image_mapping.csv";
-            if ((int)os.Platform == 4)
-            {
-                imageMappingPath = imageMappingPath.Replace(@"\", "/");
-            }
-            if (directory.Contains("_scattered")){
-                fileName_forMapping = directory[0..^10];
-            }
-            else{
-                fileName_forMapping = directory;
-            }
-            string number_forLabelMapping = "-1";
-            string[] lines = System.IO.File.ReadAllLines(imageMappingPath);
-            foreach (string line in lines)
-            {
-                string[] columns = line.Split(',');
-                foreach (string column in columns)
-                {
-                    string[] items = column.Split(" ");
-                    if (items[0] == fileName_forMapping) // Finds a match
-                    {
-                        number_forLabelMapping = items[1];
-                    }
-                }
-            }
-            if (number_forLabelMapping != "-1") // If we found a match
-            {
-                return GetLabelForNumber(number_forLabelMapping);
-                
-            }
-            else{return null;}
-        }
-        private string GetLabelForNumber(string numberToMap)
+        private string GetLabelForImage(string filename)
         {
             var os = Environment.OSVersion;
             string imageMappingPath = @".\data\label_mapping.csv";
@@ -188,7 +163,7 @@ namespace ImageGuessingGame.GameContext
                 foreach (string column in columns)
                 {
                     string[] items = column.Split(" ");
-                    if (items[0] == numberToMap) // Finds a match
+                    if (items[0] == filename) // Finds a match
                     {
                         label = string.Join(" ", items[1..^0]);
                     }

@@ -22,7 +22,6 @@ namespace ImageGuessingGame.Pages
     {
 
         private readonly ILoginUserProvider _loginUserProvider;
-        private readonly GuessingGameContext _guessingGameContext;
         private readonly IGameProvider _gameProvider;
         public LoginUser LoggedUser;
         public bool IsCreator = false;
@@ -46,7 +45,7 @@ namespace ImageGuessingGame.Pages
                 {
                     gameId = Guid.Parse(Request.Query["gameId"]);
                 }
-                catch (Exception e)
+                catch
                 {
                     gameId = Guid.Parse(HttpContext.Session.GetString("GameGuid"));
                 }
@@ -71,10 +70,6 @@ namespace ImageGuessingGame.Pages
                 return Page();
             }
             return RedirectToPage("../Index");
-        }
-        public async Task<IActionResult> OnPostAsync()
-        {
-            throw new NotImplementedException();
         }
     }
 

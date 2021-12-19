@@ -63,7 +63,7 @@ namespace ImageGuessingGame.Test
         {
             Directory.SetCurrentDirectory(@"..\..\..\..\ImageGuessingGame\wwwroot\uploads");
             var imageProcessor = new ImageProcessor();
-            string ImagePath = "isbear.jpg";
+            string ImagePath = "unplash.jpg";
             string pathforslices = "test";
             imageProcessor.AutomaticSliceVoronoi(ImagePath,pathforslices);
             //var lastmodified = File.GetLastWriteTime(@".\wwwroot\output.png");
