@@ -1,0 +1,23 @@
+@page 
+@model LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>Use this page to login.</p>
+<p>Enter your name and password:</p>
+<p style="color:red">@Model.Error</p>
+
+<form method="post">
+    Name:
+    <br>
+    <input asp-for="User_Attempt.UserName"/>
+    <br>
+    Password:
+    <br>
+    <input asp-for="User_Attempt.PasswordHash" type="password">
+    <br>
+    <br>
+    <input type="submit" />
+</form>

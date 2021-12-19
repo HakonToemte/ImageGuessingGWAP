@@ -1,0 +1,18 @@
+@page
+@model WinModel
+@{
+    ViewData["Title"] = "Win";
+    if (Model.LoggedUser != null)
+    {
+        Layout = "_LoggedLayout";
+ 
+    }
+}
+<h1> You guessed correct</h1>
+<p> The label was @Model.Label</p>
+<img src="../output.png" />
+
+<h2> Your score is @Model.Score</h2>
+
+<a class="btn btn-primary" asp-page="Suggest"> Suggest pieces for future play</a>
+

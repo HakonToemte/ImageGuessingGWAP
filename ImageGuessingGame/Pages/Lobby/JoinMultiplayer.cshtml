@@ -1,0 +1,44 @@
+@page
+@model JoinMultiplayerModel
+@{
+    ViewData["Title"] = "JoinMultiplayer";
+    if (Model.LoggedUser != null)
+    {
+        Layout = "_LoggedLayout";
+    }
+}
+<p hidden id="username">@Model.LoggedUser.UserName</p>
+<h1>Wait for players before you start game</h1>
+<div>
+    <h4>Share this Game Id with your friends:</h4>
+    <span>
+        <input disabled id="gameId" value="@Model.Game.Id" />
+        <button onclick="copyId()">Copy</button>
+    </span>
+    @if (Model.IsCreator)
+    {
+        <form>
+            <button type="submit" id="startGame">Start Game</button>
+        </form>
+    }
+    else
+    {
+        <p id="info">Waiting for host to start...</p>
+    }
+    <div>
+        <h4>Joined players</h4>
+        <ul id="playerList"></ul>
+    </div>
+</div>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/startgame.js"></script>
+<script>
+    function copyId() {
+        var copyText = document.getElementById("gameId");
+
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+
+        navigator.clipboard.writeText(copyText.value);
+    }
+</script>

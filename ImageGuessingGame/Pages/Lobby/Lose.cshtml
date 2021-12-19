@@ -1,0 +1,15 @@
+@page
+@model LoseModel
+@{
+    ViewData["Title"] = "Lose";
+    if (Model.LoggedUser != null)
+    {
+        Layout = "_LoggedLayout";
+ 
+    }
+}
+<h1> You lost</h1>
+<p> The label was @Model.Label</p>
+<img src="../output.png" />
+
+

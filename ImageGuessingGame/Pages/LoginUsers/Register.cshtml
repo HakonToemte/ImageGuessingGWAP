@@ -1,0 +1,23 @@
+@page 
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>Use this page to register a new user.</p>
+<p>Create a user:</p>
+<p style="color:red">@Model.Error</p>
+
+<form method="post">
+    Name:
+    <br>
+    <input asp-for="New_User.UserName"/>
+    <br>
+    Password:
+    <br>
+    <input asp-for="New_User.PasswordHash" type="password">
+    <br>
+    <br>
+    <input type="submit" />
+</form>

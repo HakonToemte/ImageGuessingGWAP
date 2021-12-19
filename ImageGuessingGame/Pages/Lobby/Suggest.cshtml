@@ -1,0 +1,33 @@
+@page
+@model SuggestModel
+@{
+    ViewData["Title"] = "Suggest";
+    if (Model.LoggedUser != null)
+    {
+        Layout = "_LoggedLayout";
+ 
+    }
+}
+<h1> Suggest 5 pieces that would've helped you the most</h1>
+<div>
+    <img id="imgsuggest" src="../output.png" />
+</div>
+<p> You chose @if(@Model.Index != -1){
+    @Model.Index
+}
+</p>
+<form asp-page-handler="Choose" method="post">
+        <button style="outline: 0;" id = "myButton"></button>
+        <input id ="cursorx" type="hidden" name="cursorx" value="" />
+        <input id ="cursory" type="hidden" name="cursory" value="" />
+</form>
+<script type="text/javascript">
+function printMousePos(event) {
+    document.getElementById("cursorx").value = event.offsetX;
+    document.getElementById("cursory").value = event.offsetY;
+    document.getElementById("myButton").click();
+}
+window.onload = function(){
+    document.getElementById('imgsuggest').addEventListener('click', printMousePos); 
+}
+</script>

@@ -1,0 +1,38 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Index";
+    string[] TableHeaders = new string[] {"Username", "Highscore"};
+    if (Model.LoggedUser != null)
+    {
+        Layout = "_LoggedLayout";
+    }
+}
+<table class = "table table-bordered">
+        <thead>
+            <tr>
+                @{
+                    foreach (var head in TableHeaders)
+                    {
+                        <th>
+                            @head
+                        </th>
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (LoginUser loginUser in Model.LoginUsers)
+            {
+            <tr>
+                <td>@loginUser.UserName</td>
+                @{if (loginUser.Highscore==0){
+                    <td>-</td>
+                }else{
+                    <td>@loginUser.Highscore</td>
+                }
+                    }
+            </tr>
+            }
+        </tbody>
+    </table>

@@ -1,0 +1,24 @@
+@page
+@model MultiplayerGameModel
+@{
+    ViewData["Title"] = "Multiplayer";
+    if (Model.LoggedUser != null)
+    {
+        Layout = "_LoggedLayout";
+
+    }
+}
+<img id = "img" src="../output.png" />
+<p hidden id="userName">@Model.LoggedUser</p>
+<p hidden id="gameId">@Model.Game.Id</p>
+
+
+<form method=" ">
+    <label for="guess">Make your guess</label>
+    <input type="text" name="guess" id="guess"></input>
+    <button id ="submit"> Show next or submit</button>
+</form>
+
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/multiplayer.js"></script>

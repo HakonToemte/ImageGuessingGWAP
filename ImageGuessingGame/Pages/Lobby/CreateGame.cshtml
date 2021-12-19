@@ -1,0 +1,39 @@
+@page
+@model CreateGameModel
+@{
+    ViewData["Title"] = "CreateGame";
+    string[] TableHeaders = new string[] {};
+    if (Model.LoggedUser != null)
+    {
+        Layout = "_LoggedLayout";
+    }
+}
+<p>@Model.Error</p>
+<form method="post">
+    <label for="gamemode">Choose a gamemode:</label>
+    <select name="gamemode" id="gamemode">
+        <option value="0">Normal</option>
+        <option value="1">Normal with only uploaded images</option>
+        <option value="2">Multiplayer</option>
+    </select>
+    <input type="submit" id="createGame" />
+</form>
+<br>
+<form method=" " asp-page="./JoinMultiplayer">
+    <h3>Join multiplayer game</h3>
+    <label for="gameId">Enter Game ID</label>
+    <input name="gameId" id="gameId" />
+    <button type="submit" id="joinButton">Join</button>
+</form>
+
+<script>
+    document
+        .getElementById("joinButton")
+        .addEventListener("click", function (event) {
+            var gameId = document.getElementById("gameId").value;
+            if (gameId != "") {
+                const url = new URL("https://localhost:5001/JoinMultiplayer?gameId=" + gameId);
+                window.location.replace(url);
+            }
+        });
+</script>

@@ -1,0 +1,12 @@
+@page
+@model SuggestionsModel
+@{
+    ViewData["Title"] = "Suggsestions";
+    if (Model.LoggedUser != null)
+    {
+        Layout = "_LoggedLayout";
+ 
+    }
+}
+<h1> Suggestions </h1>
+<img id="image" src="../output.png">

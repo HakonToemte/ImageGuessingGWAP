@@ -1,0 +1,21 @@
+@page
+@model GameModel
+@{
+    ViewData["Title"] = "Game";
+    if (Model.LoggedUser != null)
+    {
+        Layout = "_LoggedLayout";
+ 
+    }
+}
+<img src="../output.png" />
+
+
+<form method="POST">
+    <input type="text" for="Guess" name="Guess">Make your guess</input>
+    <button type="submit"> Show next or submit</button>
+    <button type="submit" asp-page-handler="Quit"> Quit</button>
+</form>
+
+
+<h2>@Model.Success</h2>

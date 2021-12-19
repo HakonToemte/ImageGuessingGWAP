@@ -1,0 +1,20 @@
+@page
+@model WinMultiModel
+@{
+    ViewData["Title"] = "Win Multiplayer";
+    if (Model.LoggedUser != null)
+    {
+        Layout = "_LoggedLayout";
+ 
+    }
+}
+<h1> @Model.Winner IS THE WINNER</h1>
+<p> The label was @Model.Label</p>
+<h2> @Model.Winner got a score of: @Model.Score</h2>
+<img src="../output.png" />
+
+
+@{if (@Model.Winner == @Model.LoggedUser){
+    <a class="btn btn-primary" asp-page="Suggest"> Suggest pieces for future play</a>
+}
+}
