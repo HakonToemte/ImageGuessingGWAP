@@ -54,6 +54,7 @@ namespace ImageGuessingGame.Pages
             var user = await _loginUserProvider.GetLoginUserByName(LoggedUser);
             var guid = HttpContext.Session.GetString("GameGuid");
             var game = await _gameProvider.GetGameByGuid(Guid.Parse(guid));
+            var gameplay = new Gameplay(game.Id);
             Label = game.Oracle.Label;
             Guess = Request.Form["Guess"];
             Console.WriteLine(Label);

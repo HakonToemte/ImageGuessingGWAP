@@ -70,13 +70,6 @@ namespace ImageGuessingGame.GameContext
             this.FindImageFolder();
             SelectTile();
         }
-        public void StartUpload()
-        {
-            ImageProcessor = new ImageProcessor();
-            PartialIndex = new List<Index>();
-            this.FindUploadedImageFolder();
-            SelectTile();
-        }
         public void FindImageFolder() //Oracle finds a random image from data
         {
             DirectoryInfo dir;
@@ -110,35 +103,6 @@ namespace ImageGuessingGame.GameContext
                 }
             }
             return count;
-        }
-        public void FindUploadedImageFolder() // Oracle finds a random image from only the uploaded images
-        {
-            DirectoryInfo dir;
-            var os = Environment.OSVersion;
-            if ((int)os.Platform == 4)
-            {
-                dir = new DirectoryInfo(@"./data");
-            }
-            else
-            {
-                dir = new DirectoryInfo(@".\data");
-            }
-            DirectoryInfo[] fis = dir.GetDirectories(); //Finner alle directories i data mappen. Som da er lik totalt antall bilder
-            var dir_list = new List<DirectoryInfo>();
-            foreach (var image_path in fis){
-                if (!image_path.Name.Contains("ILSVRC2012")){
-                    dir_list.Add(image_path);
-                }
-            }
-            int amountOfImages = dir_list.Count;
-            var rand = new Random();
-            int randint = rand.Next(amountOfImages);
-            var image_folder = dir_list[randint]; // Random image folder
-            ImagePath = image_folder.Name;
-            Label = ImageProcessor.GetLabel(ImagePath);
-
-            NumberOfSlices = FindNumberOfSlices(image_folder);
-
         }
     }
 }

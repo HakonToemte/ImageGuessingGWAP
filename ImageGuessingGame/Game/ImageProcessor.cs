@@ -1,16 +1,13 @@
-using System.Runtime.InteropServices;
 using System;
 using System.Windows.Shapes;
-using System.Windows.Media;
+using System.Drawing;
 using System.Numerics;
 using System.Linq;
 using System.IO;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using FortuneVoronoi;
 
 namespace ImageGuessingGame.GameContext
@@ -72,7 +69,7 @@ namespace ImageGuessingGame.GameContext
             {
                 foreach (Image<Rgba32> image_slice in slices)
                 {
-                    o.DrawImage(image_slice, new Point(0, 0), 1f);
+                    o.DrawImage(image_slice, new SixLabors.ImageSharp.Point(0, 0), 1f);
                 }
             });
             outputImage.Save("wwwroot/output.png");
@@ -92,8 +89,6 @@ namespace ImageGuessingGame.GameContext
                 var voronoiseeds = RandomPoints(5, image.Width, image.Height);
                 Voronoi(voronoiseeds);
                 //Console.WriteLine(s.Edges);
-                
-                
             }
         }
         private void Voronoi(List<Vector2> voronoiseeds){
@@ -124,7 +119,7 @@ namespace ImageGuessingGame.GameContext
                         var width = (i+1)*image.Width/rows;
                         var height = (j+1)*image.Height/columns;
                         var crop = image.Clone(ima=>ima.Crop(SixLabors.ImageSharp.Rectangle.FromLTRB(x,y,width,height)));
-                        slice.Mutate(s=>s.DrawImage(crop,new Point(x, y), 1f));
+                        slice.Mutate(s=>s.DrawImage(crop,new SixLabors.ImageSharp.Point(x, y), 1f));
                         slice.Save($"{pathforSlices}/{counter}.png");
                         counter++;
                     }

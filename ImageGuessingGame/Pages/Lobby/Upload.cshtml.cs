@@ -52,7 +52,7 @@ namespace ImageGuessingGame.Pages
                     await ImageFile.CopyToAsync(fileStream);
                 };
             var imageProcessor = new ImageProcessor();
-            imageProcessor.AutomaticSliceVoronoi(path_for_fullimage, directory.FullName);
+            imageProcessor.AutomaticSlice(path_for_fullimage, directory.FullName);
             string label = Request.Form["label"];
             AddLabel(label, directory.Name);
             return Page();

@@ -50,17 +50,21 @@ namespace ImageGuessingGame.Pages
             }
             var user = await _loginUserProvider.GetLoginUserByName(LoggedUser);
             var gamemode = Request.Form["gamemode"].ToString();
-            var game = new Game(user, Int32.Parse(gamemode));
+            Game game;
+            if (gamemode == "0"){
+                game = new SinglePlayerGame(user);
+            }else{
+                game = new MultiPlayerGame(user);
+            }
             await _gameProvider.AddGame(game);
             HttpContext.Session.SetString("GameGuid", game.Id.ToString());
             var suggestion = await _suggestionProvider.GetSuggestionForImage(game.Oracle.ImagePath);
-            Console.WriteLine(suggestion!=null);
             if (suggestion != null)
             {
                 game.Oracle.Suggestion = suggestion;
                 await _gameProvider.UpdateGame(game);
             }
-            if (Int32.Parse(gamemode) == 2)
+            if (Int32.Parse(gamemode) == 1)
             {
                 return RedirectToPage("./JoinMultiplayer", new { userName = user.UserName });
             }
