@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Bcrypt" Version="1.0.0" />
     <PackageReference Include="BCrypt.Net" Version="0.1.0" />
     <PackageReference Include="EPP.PresentationCore" Version="1.0.0" />
     <PackageReference Include="FortuneVoronoi" Version="4.0.0" />
@@ -20,6 +21,7 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
     <PackageReference Include="SixLabors.ImageSharp.Web" Version="1.0.4" />
+    <PackageReference Include="Xunit" Version="2.4.1" />
   </ItemGroup>
 
 </Project>
