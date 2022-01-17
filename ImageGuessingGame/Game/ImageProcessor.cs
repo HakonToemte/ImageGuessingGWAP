@@ -1,4 +1,5 @@
 using System;
+using System.Windows;
 using System.Windows.Shapes;
 using System.Drawing;
 using System.Numerics;
@@ -8,7 +9,6 @@ using System.Collections.Generic;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using FortuneVoronoi;
 
 namespace ImageGuessingGame.GameContext
 {
@@ -82,25 +82,56 @@ namespace ImageGuessingGame.GameContext
             return GetLabelForImage(image_folder);
         }
         public void AutomaticSliceVoronoi(string pathforImage, string pathforSlices){
-            var points = 5;
-            VoronoiGraph s = new VoronoiGraph();
+            var points = 10;
             using (Image<Rgba32> image = Image.Load<Rgba32>(pathforImage))
             {
-                var voronoiseeds = RandomPoints(5, image.Width, image.Height);
-                Voronoi(voronoiseeds);
-                //Console.WriteLine(s.Edges);
+                var voronoiseeds = RandomPoints(points, image.Width, image.Height);
+                Voronoi(voronoiseeds, image.Width, image.Height);
+
             }
         }
-        private void Voronoi(List<Vector2> voronoiseeds){
-            var polygon = new Polygon();
+        private void Voronoi(List<System.Drawing.Point> voronoiseeds, int width, int height){
+            var dict = new Dictionary<System.Drawing.Point, System.Drawing.Point[]>();
+            for(var x = 0; x<width;x++){
+                for (var y=0; y<height;y++){
+                    double min_distance = 10000;
+                    var list = new List<System.Drawing.Point>();
+                    foreach(var seed in voronoiseeds){
+                        var distance = Math.Round(Math.Sqrt((Math.Pow(seed.X - x, 2) + Math.Pow(seed.Y - y, 2))),0);
+                        if (distance < min_distance){
+                            min_distance = distance;
+                        }
+                    }
+                    foreach(var seed2 in voronoiseeds){
+                        var distance2 = Math.Round(Math.Sqrt((Math.Pow(seed2.X - x, 2) + Math.Pow(seed2.Y - y, 2))),0);
+                        if (distance2 == min_distance){
+                            list.Add(seed2);
+                        }
+                    }
+                    if (list.Count > 2){
+                        dict.Add(new System.Drawing.Point(x,y),list.ToArray());
+                    }
+                    
+                }
+            }
+            ComputePolygons(dict);
         }
-        private List<Vector2> RandomPoints(int amountOfPoints, int width, int height){
+        private void ComputePolygons(Dictionary<System.Drawing.Point,System.Drawing.Point[]> dict){
+            foreach(var point_set in dict){
+                Console.WriteLine("_________________");
+                Console.WriteLine("key: " + point_set.Key);
+                foreach(var seed in point_set.Value){
+                    Console.WriteLine(seed);
+                }
+            }
+        }
+        private List<System.Drawing.Point> RandomPoints(int amountOfPoints, int width, int height){
             Random r = new Random();
-            var list = new List<Vector2>();
+            var list = new List<System.Drawing.Point>();
             for (var i = 0; i < amountOfPoints; i++){
                 var intx = r.Next(0, width);
                 var inty = r.Next(0, height);
-                list.Add(new Vector2(intx,inty));
+                list.Add(new System.Drawing.Point(intx,inty));
             }
             return list;
         }
