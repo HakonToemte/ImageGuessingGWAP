@@ -89,6 +89,7 @@ namespace ImageGuessingGame.GameContext
             var image_folder = fis[randint]; // Random image folder
             ImagePath = image_folder.Name;
             Label = ImageProcessor.GetLabel(ImagePath);
+            Console.WriteLine(Label);
             NumberOfSlices = FindNumberOfSlices(image_folder);
 
         }

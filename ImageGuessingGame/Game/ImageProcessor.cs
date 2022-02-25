@@ -176,7 +176,7 @@ namespace ImageGuessingGame.GameContext
         private string GetLabelForImage(string filename)
         {
             var os = Environment.OSVersion;
-            string imageMappingPath = @".\data\label_mapping.csv";
+            string imageMappingPath = @".\data\image_mapping.csv";
             if ((int)os.Platform == 4)
             {
                 imageMappingPath = imageMappingPath.Replace(@"\", "/");
@@ -189,12 +189,15 @@ namespace ImageGuessingGame.GameContext
                 foreach (string column in columns)
                 {
                     string[] items = column.Split(" ");
+                    Console.WriteLine(items[0]);
+                    Console.WriteLine(filename);
                     if (items[0] == filename) // Finds a match
                     {
                         label = string.Join(" ", items[1..^0]);
                     }
                 }
             }
+            Console.WriteLine(label, "here");
             if (label != "unkn") // If we found a match
             {
                 return label;
