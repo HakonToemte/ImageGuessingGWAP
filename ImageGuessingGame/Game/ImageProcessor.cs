@@ -82,46 +82,61 @@ namespace ImageGuessingGame.GameContext
             return GetLabelForImage(image_folder);
         }
         public void AutomaticSliceVoronoi(string pathforImage, string pathforSlices){
-            var points = 10;
+            var points =36;
+            var width=600;
+            var height=400;
             using (Image<Rgba32> image = Image.Load<Rgba32>(pathforImage))
             {
-                var voronoiseeds = RandomPoints(points, image.Width, image.Height);
-                Voronoi(voronoiseeds, image.Width, image.Height);
+                var randompoints = RandomPoints(points, width, height);
+                var voronoiseeds = randompoints.Select(x => new Voronoiseed(x));
+                var slices = Voronoi(voronoiseeds, width, height);
+                ImageSlice(slices, pathforImage, pathforSlices);
 
             }
         }
-        private void Voronoi(List<System.Drawing.Point> voronoiseeds, int width, int height){
-            var dict = new Dictionary<System.Drawing.Point, System.Drawing.Point[]>();
+        private List<System.Drawing.Point>[] Voronoi(IEnumerable<Voronoiseed> voronoiseeds, int width, int height){
+            var dict = new Dictionary<Voronoiseed, List<System.Drawing.Point>>();
+            foreach (var entry in voronoiseeds){
+                dict[entry]=new List<System.Drawing.Point>();
+            }
             for(var x = 0; x<width;x++){
                 for (var y=0; y<height;y++){
                     double min_distance = 10000;
+                    Voronoiseed closestseed =null;
                     var list = new List<System.Drawing.Point>();
-                    foreach(var seed in voronoiseeds){
-                        var distance = Math.Round(Math.Sqrt((Math.Pow(seed.X - x, 2) + Math.Pow(seed.Y - y, 2))),0);
+                    foreach(var seed in dict){
+                        var distance = Math.Round(Math.Sqrt((Math.Pow(seed.Key.Point.X - x, 2) + Math.Pow(seed.Key.Point.Y - y, 2))),0);
                         if (distance < min_distance){
                             min_distance = distance;
+                            closestseed = seed.Key;
                         }
                     }
-                    foreach(var seed2 in voronoiseeds){
-                        var distance2 = Math.Round(Math.Sqrt((Math.Pow(seed2.X - x, 2) + Math.Pow(seed2.Y - y, 2))),0);
+                    int count=0;
+                    foreach(var seed2 in dict){
+                        var distance2 = Math.Round(Math.Sqrt((Math.Pow(seed2.Key.Point.X - x, 2) + Math.Pow(seed2.Key.Point.Y - y, 2))),0);
                         if (distance2 == min_distance){
-                            list.Add(seed2);
+                            count ++;
                         }
                     }
-                    if (list.Count > 2){
-                        dict.Add(new System.Drawing.Point(x,y),list.ToArray());
+                    if (count ==1 ){
+                    dict[closestseed].Add(new System.Drawing.Point(x,y));
                     }
-                    
                 }
             }
-            ComputePolygons(dict);
+            return dict.Values.ToArray();
         }
-        private void ComputePolygons(Dictionary<System.Drawing.Point,System.Drawing.Point[]> dict){
-            foreach(var point_set in dict){
-                Console.WriteLine("_________________");
-                Console.WriteLine("key: " + point_set.Key);
-                foreach(var seed in point_set.Value){
-                    Console.WriteLine(seed);
+        private void ImageSlice(List<System.Drawing.Point>[] ArrayOfSlices, string pathforImage, string pathforSlices){
+            using (Image<Rgba32> image = Image.Load<Rgba32>(pathforImage))
+            {
+                image.Mutate(x=>x.Resize(600, 400));
+                var counter = 0;
+                foreach (var pixels in ArrayOfSlices){
+                    Image<Rgba32> slice = new Image<Rgba32>(image.Width, image.Height);
+                    foreach(var pixel in pixels){
+                        slice[pixel.X,pixel.Y] = image[pixel.X,pixel.Y];
+                    }
+                    counter++;
+                    slice.Save($"{pathforSlices}/{counter}.png");
                 }
             }
         }
@@ -204,5 +219,18 @@ namespace ImageGuessingGame.GameContext
             }
             else{return null;}
         }
+    }
+    public class Voronoiseed
+    {
+        public Voronoiseed(System.Drawing.Point point){
+            Point = point;
+            if (Neighbors == null){
+                Neighbors = new List<System.Drawing.Point>();
+            }else{
+                Console.WriteLine("ELSE");
+            }
+        }
+        public System.Drawing.Point Point{get;set;}
+        public List<System.Drawing.Point> Neighbors{get;set;}
     }
 }
